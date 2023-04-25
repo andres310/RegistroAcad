@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.RowEditEvent;
@@ -40,6 +42,17 @@ public class EstudianteBean {
     public void editEstudiante(RowEditEvent event) {
         Estudiante estudiante = (Estudiante) event.getObject();
         estudianteService.modificarEstudiante(estudiante);
+    }
+    
+    public void processForm() {
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        try {
+            estudianteService.registrarEstudiante(estudianteSeleccionado);
+            estudiantes.add(estudianteSeleccionado);
+            ctx.addMessage(null, new FacesMessage("Estudiante añadido"));
+        } catch (Exception ex) {
+            ctx.addMessage(null, new FacesMessage(ex.getMessage()));
+        }
     }
     
     // Get y set respectivos
